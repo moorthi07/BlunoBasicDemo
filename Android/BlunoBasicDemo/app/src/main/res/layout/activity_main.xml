@@ -31,6 +31,86 @@
             android:layout_alignParentBottom="true" />
     </ScrollView>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+        <Button
+            android:id="@+id/UP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view1"
+            android:layout_centerHorizontal="true"
+            android:minWidth="48dp"
+            android:text="@string/up" />
+
+        <Button
+            android:id="@+id/DN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_centerHorizontal="true"
+            android:minWidth="48dp"
+            android:text="@string/dn" />
+
+        <Button
+            android:id="@+id/LH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view1"
+            android:minWidth="48dp"
+            android:text="@string/lh" />
+
+        <Button
+            android:id="@+id/RH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/view1"
+            android:minWidth="48dp"
+            android:text="RH" />
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_below="@+id/view1"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:src="@drawable/ic_launcher" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView2"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_above="@+id/view1"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:src="@drawable/ic_launcher" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView3"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_toRightOf="@+id/view1"-->
+        <!--            android:src="@drawable/ic_launcher" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView4"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_toLeftOf="@+id/view1"-->
+        <!--            android:src="@drawable/ic_launcher" />-->
+
+    </RelativeLayout>
+
     <Button
         android:id="@+id/buttonSerialSend"
         android:layout_width="wrap_content"
@@ -53,7 +133,7 @@
     <EditText
         android:id="@+id/serialSendText"
         android:layout_width="310dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_below="@+id/buttonScan"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
@@ -62,7 +142,7 @@
         android:ems="10"
         android:inputType="text"
         android:text="Data sending Area"
-        android:textColor="#999999"
+        android:textColor="#BCAAA4"
         android:textSize="20dip" />
 
     <Button
@@ -71,6 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/serialSendText"
         android:layout_alignParentTop="true"
+        android:minWidth="48dp"
         android:text="Scan" />
 
 </RelativeLayout>

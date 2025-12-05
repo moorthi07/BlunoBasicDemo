@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.blunobasicremote;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

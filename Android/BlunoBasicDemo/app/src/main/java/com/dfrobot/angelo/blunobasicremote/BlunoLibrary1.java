@@ -1,8 +1,13 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.blunobasicremote;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.annotation.SuppressLint;
@@ -29,7 +34,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract  class BlunoLibrary  extends Activity{
+public abstract  class BlunoLibrary1 extends Activity{
 
 	private Context mainContext=this;
 
@@ -85,7 +90,7 @@ public abstract  class BlunoLibrary  extends Activity{
 	
 	public boolean mConnected = false;
 
-    private final static String TAG = BlunoLibrary.class.getSimpleName();
+    private final static String TAG = BlunoLibrary1.class.getSimpleName();
 
     private Runnable mConnectingOverTimeRunnable=new Runnable(){
 
@@ -110,9 +115,80 @@ public abstract  class BlunoLibrary  extends Activity{
 	public static final String SerialPortUUID="0000dfb1-0000-1000-8000-00805f9b34fb";
 	public static final String CommandUUID="0000dfb2-0000-1000-8000-00805f9b34fb";
     public static final String ModelNumberStringUUID="00002a24-0000-1000-8000-00805f9b34fb";
-	
+
+	private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS= 1;
+	private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
+	private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
+
     public void onCreateProcess()
     {
+		if (Build.VERSION.SDK_INT >= 23) {
+			// Marshmallow+ Permission APIs
+			fuckMarshMallow();
+		}
+
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//			if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+//					== PackageManager.PERMISSION_GRANTED) {
+//				if (this.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+//						!= PackageManager.PERMISSION_GRANTED) {
+//					if (this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+//						final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//						builder.setTitle("This app needs background location access");
+//						builder.setMessage("Please grant location access so this app can detect beacons in the background.");
+//						builder.setPositiveButton(android.R.string.ok, null);
+//						builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//
+//							@TargetApi(23)
+//							@Override
+//							public void onDismiss(DialogInterface dialog) {
+//								requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+//										PERMISSION_REQUEST_BACKGROUND_LOCATION);
+//							}
+//
+//						});
+//						builder.show();
+//					}
+//					else {
+//						final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//						builder.setTitle("Functionality limited");
+//						builder.setMessage("Since background location access has not been granted, this app will not be able to discover beacons in the background.  Please go to Settings -> Applications -> Permissions and grant background location access to this app.");
+//						builder.setPositiveButton(android.R.string.ok, null);
+//						builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//
+//							@Override
+//							public void onDismiss(DialogInterface dialog) {
+//							}
+//
+//						});
+//						builder.show();
+//					}
+//
+//				}
+//			} else {
+//				if (!this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+//					requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+//									Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+//							PERMISSION_REQUEST_FINE_LOCATION);
+//				}
+//				else {
+//					final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//					builder.setTitle("Functionality limited");
+//					builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons.  Please go to Settings -> Applications -> Permissions and grant location access to this app.");
+//					builder.setPositiveButton(android.R.string.ok, null);
+//					builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//
+//						@Override
+//						public void onDismiss(DialogInterface dialog) {
+//						}
+//
+//					});
+//					builder.show();
+//				}
+//
+//			}
+//		}
+    	//////////////////////
     	if(!initiate())
 		{
 			Toast.makeText(mainContext, R.string.error_bluetooth_not_supported,
@@ -182,7 +258,105 @@ public abstract  class BlunoLibrary  extends Activity{
 		
     }
     
-    
+
+    //----------------
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+				Map<String, Integer> perms = new HashMap<String, Integer>();
+				// Initial
+				perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
+
+
+				// Fill with results
+				for (int i = 0; i < permissions.length; i++)
+					perms.put(permissions[i], grantResults[i]);
+
+				// Check for ACCESS_FINE_LOCATION
+				if (perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+				) {
+					// All Permissions Granted
+
+
+					Toast.makeText(BlunoLibrary1.this, "All Permission GRANTED !! Thank You :)", Toast.LENGTH_SHORT)
+							.show();
+
+
+				} else {
+					// Permission Denied
+					Toast.makeText(BlunoLibrary1.this, "One or More Permissions are DENIED Exiting App :(", Toast.LENGTH_SHORT)
+							.show();
+
+					finish();
+				}
+			}
+			break;
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
+
+
+	@TargetApi(Build.VERSION_CODES.M)
+	private void fuckMarshMallow() {
+		List<String> permissionsNeeded = new ArrayList<String>();
+
+		final List<String> permissionsList = new ArrayList<String>();
+		if (!addPermission(permissionsList, Manifest.permission.ACCESS_FINE_LOCATION))
+			permissionsNeeded.add("Show Location");
+
+		if (permissionsList.size() > 0) {
+			if (permissionsNeeded.size() > 0) {
+
+				// Need Rationale
+				String message = "App need access to " + permissionsNeeded.get(0);
+
+				for (int i = 1; i < permissionsNeeded.size(); i++)
+					message = message + ", " + permissionsNeeded.get(i);
+
+				showMessageOKCancel(message,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+										REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+							}
+						});
+				return;
+			}
+			requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+					REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+			return;
+		}
+
+		Toast.makeText(BlunoLibrary1.this, "No new Permission Required- Launching App .You are Awesome!!", Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+		new AlertDialog.Builder(BlunoLibrary1.this)
+				.setMessage(message)
+				.setPositiveButton("OK", okListener)
+				.setNegativeButton("Cancel", null)
+				.create()
+				.show();
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	private boolean addPermission(List<String> permissionsList, String permission) {
+
+		if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+			permissionsList.add(permission);
+			// Check for Rationale Option
+			if (!shouldShowRequestPermissionRationale(permission))
+				return false;
+		}
+		return true;
+	}
+	//----------------
     
     public void onResumeProcess() {
     	System.out.println("BlUNOActivity onResume");
